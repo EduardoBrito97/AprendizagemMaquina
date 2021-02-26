@@ -2,7 +2,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 
 k = 5
-classifier = KNeighborsClassifier(n_neighbors=k)
+classifier = KNeighborsClassifier(n_neighbors=k, weights='uniform')
 
 def train(x_train, y_train):
     classifier.fit(x_train, y_train)
