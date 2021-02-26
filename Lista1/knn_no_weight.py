@@ -9,4 +9,4 @@ def train(x_train, y_train):
 
 def predict(x_test, y_test):
     y_pred = classifier.predict(x_test)
-    return confusion_matrix(y_test, y_pred),  classification_report(y_test, y_pred)
+    return confusion_matrix(y_test, y_pred),  classification_report(y_test, y_pred, output_dict=True)
