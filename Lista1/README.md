@@ -5,6 +5,6 @@
     * k-NN com peso;
     * k-NN adaptativo.
 * Variar o parâmetro k em 1, 2, 3, 5, 7, 11, 13 e 15.
-* Datasets provenientes de [PROMISE DATASETS PAGE](https://github.com/EduardoBrito97/AprendizagemMaquina.git). Datasets escolhidos:
+* Datasets provenientes de [PROMISE DATASETS PAGE](http://promise.site.uottawa.ca/SERepository/datasets-page.html). Datasets escolhidos:
     * PC1/Software defect prediction
-    * Cocomo81/Software cost estimation
+    * Class-level data for KC1 (Defective or Not)/Software defect prediction
