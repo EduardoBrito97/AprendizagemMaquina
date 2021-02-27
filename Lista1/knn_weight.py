@@ -5,6 +5,8 @@ k = 5
 classifier = KNeighborsClassifier(n_neighbors=k, weights='distance')
 
 def train(x_train, y_train):
+    global classifier
+    classifier = KNeighborsClassifier(n_neighbors=k, weights='distance')
     classifier.fit(x_train, y_train)
 
 def predict(x_test, y_test):
