@@ -1,7 +1,7 @@
-b'false' = {'precision': 0.9306306306306306, 'recall': 0.9963963963963964, 'f1-score': 0.9450824834394813, 'support': 103.2}
+b'false' = {'precision': 0.9306306306306306, 'recall': 0.990990990990991, 'f1-score': 0.9423302467282445, 'support': 103.2}
 b'true' = {'precision': 0.0, 'recall': 0.0, 'f1-score': 0.0, 'support': 7.7}
-accuracy = 0.927027027027027
-macro avg = {'precision': 0.7653153153153153, 'recall': 0.7981981981981981, 'f1-score': 0.7725412417197407, 'support': 110.9}
-weighted avg = {'precision': 0.9093823553283013, 'recall': 0.927027027027027, 'f1-score': 0.9125506412524669, 'support': 110.9}
-train_time_in_ms = 0.5
-test_time_in_ms = 20.9
+accuracy = 0.9216216216216215
+macro avg = {'precision': 0.7153153153153153, 'recall': 0.7454954954954955, 'f1-score': 0.7211651233641223, 'support': 110.9}
+weighted avg = {'precision': 0.9093823553283013, 'recall': 0.9216216216216215, 'f1-score': 0.90979840454123, 'support': 110.9}
+train_time_in_ms = 1.0
+test_time_in_ms = 27.4

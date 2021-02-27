@@ -8,6 +8,7 @@ import math
 import json
 import os
 import time
+from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from dataset_reader import get_dataset, number_of_attributes, datasets
@@ -45,6 +46,11 @@ def train_and_get_reports(algorithm, dataset_index, trainer):
 
             x_train = np.concatenate((x[0 : i], x[last_index:len(x)]))
             y_train = np.concatenate((y[0 : i], y[last_index:len(y)])) 
+
+            scaler = StandardScaler()
+            scaler.fit(x_train)
+            x_train = scaler.transform(x_train)
+            x_test = scaler.transform(x_test)
 
             start_time = time.time()
             trainer.train(x_train, y_train)

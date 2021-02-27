@@ -1,9 +1,9 @@
-accuracy = 0.9216134316134316
+accuracy = 0.9108108108108108
 true positives = 0.0
-true negatives = 102.2
-false positives = 1.0
+true negatives = 101.0
+false positives = 2.2
 false negatives = 7.7
 positives precision = 0.0
-negatives precision = 0.990982800982801
-train_time_in_ms = 2401.1
-test_time_in_ms = 1814.8
+negatives precision = 0.9801801801801802
+train_time_in_ms = 2306.3
+test_time_in_ms = 1741.4

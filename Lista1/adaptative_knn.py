@@ -33,9 +33,10 @@ def get_pred_class(dist):
         # acha qual o círculo mais próximo
         min_index = dist.argsort()[:k]
 
-        #acha a classificação baseada no y de treinamento
+        # acha a classificação baseada no y de treinamento
         cand_class = y_training[min_index]
 
+        # vê quais as classes mais presentes nos cirulos
         unique, freq = np.unique(cand_class, return_counts=True)
         return unique[freq.argmax()]
             
