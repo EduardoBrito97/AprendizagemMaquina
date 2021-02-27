@@ -1,0 +1,7 @@
+accuracy = 0.6533333333333334
+true positives = 3.0
+true negatives = 6.3
+false positives = 2.2
+false negatives = 3.0
+positives precision = 0.5251767676767678
+negatives precision = 0.7685714285714286

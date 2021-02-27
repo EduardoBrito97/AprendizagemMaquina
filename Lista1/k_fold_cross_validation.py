@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import knn_no_weight
 import knn_weight
+import adaptative_knn
 import math
 import json
 from sklearn.neighbors import KNeighborsClassifier
@@ -11,6 +12,7 @@ from dataset_reader import get_dataset, number_of_attributes
 
 no_weight = "No Weight"
 weighted = "Weigthed"
+adaptative = "Adaptative"
 
 k_fold = 10
 
@@ -85,6 +87,7 @@ def process_reports():
 if __name__ == '__main__':
     train_and_get_reports(no_weight, 1, knn_no_weight)
     train_and_get_reports(weighted, 1, knn_weight)
+    train_and_get_reports(adaptative, 1, adaptative_knn)
     reports_avg = process_reports()
 
     for knn_alg in reports_avg.keys():
