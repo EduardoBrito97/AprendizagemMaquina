@@ -6,9 +6,10 @@ import knn_weight
 import adaptative_knn
 import math
 import json
+import os
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
-from dataset_reader import get_dataset, number_of_attributes
+from dataset_reader import get_dataset, number_of_attributes, datasets
 
 no_weight = "No Weight"
 weighted = "Weigthed"
@@ -84,17 +85,23 @@ def process_reports():
             reports_avg[knn_alg][k] = report_sum
     return reports_avg
 
-if __name__ == '__main__':
-    train_and_get_reports(no_weight, 1, knn_no_weight)
-    train_and_get_reports(weighted, 1, knn_weight)
-    train_and_get_reports(adaptative, 1, adaptative_knn)
+def train_and_test_on_dataset_and_save_results(dataset_index):
+    dataset_name = datasets[dataset_index]
+    train_and_get_reports(no_weight, dataset_index, knn_no_weight)
+    train_and_get_reports(weighted, dataset_index, knn_weight)
+    train_and_get_reports(adaptative, dataset_index, adaptative_knn)
     reports_avg = process_reports()
 
+    os.mkdir("results/" + dataset_name + "/", mode = 0o666)
     for knn_alg in reports_avg.keys():
         for k in reports_avg[knn_alg]:
             current_dict = reports_avg[knn_alg][k]
-            file_name = 'results/' + str(knn_alg) + "_" + str(k) + "_results.txt"
+            file_name = 'results/' + dataset_name + "/" + str(knn_alg) + "_" + str(k) + "_results.txt"
             fo = open(file_name, "w")
             for k, v in current_dict.items():
                 fo.write(str(k) + ' = '+ str(v) + '\n')
             fo.close()
+
+if __name__ == '__main__':
+    train_and_test_on_dataset_and_save_results(0)
+    train_and_test_on_dataset_and_save_results(1)
