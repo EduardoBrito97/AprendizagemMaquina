@@ -5,3 +5,5 @@ false positives = 3.1
 false negatives = 1.5
 positives precision = 0.6968181818181818
 negatives precision = 0.6662698412698413
+train_time_in_ms = 185.5
+test_time_in_ms = 44.9

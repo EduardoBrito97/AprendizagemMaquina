@@ -7,6 +7,7 @@ import adaptative_knn
 import math
 import json
 import os
+import time
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from dataset_reader import get_dataset, number_of_attributes, datasets
@@ -45,8 +46,16 @@ def train_and_get_reports(algorithm, dataset_index, trainer):
             x_train = np.concatenate((x[0 : i], x[last_index:len(x)]))
             y_train = np.concatenate((y[0 : i], y[last_index:len(y)])) 
 
+            start_time = time.time()
             trainer.train(x_train, y_train)
+            train_time = time.time() - start_time
+
+            start_time = time.time()
             matrix, report = trainer.predict(x_test, y_test)
+            test_time = time.time() - start_time
+
+            report['train_time_in_ms'] = int(train_time * 1000)
+            report['test_time_in_ms'] = int(test_time * 1000)
             reports[algorithm][k].append(report)
             matrices[algorithm][k].append(matrix)
             #print(report)
@@ -92,11 +101,13 @@ def train_and_test_on_dataset_and_save_results(dataset_index):
     train_and_get_reports(adaptative, dataset_index, adaptative_knn)
     reports_avg = process_reports()
 
-    os.mkdir("results/" + dataset_name + "/", mode = 0o666)
+    folder_name = "results/" + dataset_name + "/" 
+    #if os.path.isfile(folder_name) == False:
+    #    os.mkdir(folder_name, mode = 0o666)
     for knn_alg in reports_avg.keys():
         for k in reports_avg[knn_alg]:
             current_dict = reports_avg[knn_alg][k]
-            file_name = 'results/' + dataset_name + "/" + str(knn_alg) + "_" + str(k) + "_results.txt"
+            file_name = folder_name + str(knn_alg) + "_" + str(k) + "_results.txt"
             fo = open(file_name, "w")
             for k, v in current_dict.items():
                 fo.write(str(k) + ' = '+ str(v) + '\n')

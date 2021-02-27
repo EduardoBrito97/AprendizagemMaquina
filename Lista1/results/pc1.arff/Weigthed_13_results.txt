@@ -3,3 +3,5 @@ b'true' = {'precision': 0.0, 'recall': 0.0, 'f1-score': 0.0, 'support': 7.7}
 accuracy = 0.9207207207207209
 macro avg = {'precision': 0.6653153153153153, 'recall': 0.695045045045045, 'f1-score': 0.6709388790202309, 'support': 110.9}
 weighted avg = {'precision': 0.9093823553283013, 'recall': 0.9207207207207209, 'f1-score': 0.9093459158534472, 'support': 110.9}
+train_time_in_ms = 1.1
+test_time_in_ms = 18.9

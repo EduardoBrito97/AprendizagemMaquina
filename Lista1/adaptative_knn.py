@@ -25,12 +25,17 @@ def train(x_train, y_train):
             rad = dist(x_train[i], x_train[j])
             if rad < min_rad:
                 min_rad = rad
+        # pega o circulo com o raio MUITO próximo da instância de classe diferente mais próxima
         adaptive_v[i] = min_rad * 0.99999
 
 def get_pred_class(dist):
-        dist = dist / (adaptive_v + 1e-5)
+        dist = dist / (adaptive_v + 1e-5) # adiciona um valor mínimo pra evitar ser 0
+        # acha qual o círculo mais próximo
         min_index = dist.argsort()[:k]
+
+        #acha a classificação baseada no y de treinamento
         cand_class = y_training[min_index]
+
         unique, freq = np.unique(cand_class, return_counts=True)
         return unique[freq.argmax()]
             

@@ -20,26 +20,42 @@ def train_and_plot_graphs(dataset_index):
         algorithms_order = []
         ks_order = []
         accuracies = []
+        train_times = []
+        test_times = []
         for algorithm in algorithms:
                 for k in ks:
                         accuracies.append(reports_avg[algorithm][k]['accuracy'])
+                        train_times.append(reports_avg[algorithm][k]['train_time_in_ms'])
+                        test_times.append(reports_avg[algorithm][k]['test_time_in_ms'])
                         algorithms_order.append(algorithm)
                         ks_order.append(k)
 
         data = {
                 'K' : ks_order,
                 'Algorithm' : algorithms_order,
-                'Avg Accuracy' : accuracies
+                'Avg Accuracy' : accuracies,
+                'Train time in ms' : train_times,
+                'Test time in ms' : test_times
         }
 
-        df = pd.DataFrame(data, columns = ['K', 'Algorithm', 'Avg Accuracy'])
+        df = pd.DataFrame(data, columns = ['K', 'Algorithm', 'Avg Accuracy', 'Train time in ms', 'Test time in ms'])
         
         dataset_name = datasets[dataset_index]
-        os.mkdir("graphs/" + dataset_name + "/", mode = 0o666)
+        folder_name = "graphs/" + dataset_name + "/"
+        #if os.path.isfile(folder_name) == False:
+        #        os.mkdir(folder_name, mode = 0o666)
 
         plt.figure()
         sns.lineplot(x="K", y="Avg Accuracy", hue="Algorithm", palette=["green", "blue", "black"], data=df)
         plt.savefig("graphs/" + dataset_name + "/accuracy.png")
+
+        plt.figure()
+        sns.lineplot(x="K", y="Train time in ms", hue="Algorithm", palette=["green", "blue", "black"], data=df)
+        plt.savefig("graphs/" + dataset_name + "/train_time.png")
+
+        plt.figure()
+        sns.lineplot(x="K", y="Test time in ms", hue="Algorithm", palette=["green", "blue", "black"], data=df)
+        plt.savefig("graphs/" + dataset_name + "/test_time.png")
 
 if __name__ == "__main__":
         train_and_plot_graphs(0)
