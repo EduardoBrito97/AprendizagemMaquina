@@ -108,8 +108,8 @@ def train_and_test_on_dataset_and_save_results(dataset_index):
     reports_avg = process_reports()
 
     folder_name = "results/" + dataset_name + "/" 
-    #if os.path.isfile(folder_name) == False:
-    #    os.mkdir(folder_name, mode = 0o666)
+    if os.path.exists(folder_name) == False:
+            os.mkdir(folder_name, mode = 0o666)
     for knn_alg in reports_avg.keys():
         for k in reports_avg[knn_alg]:
             current_dict = reports_avg[knn_alg][k]
