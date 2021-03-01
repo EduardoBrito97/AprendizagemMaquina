@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
+from knn_weight import true_positive_precision
 
 k = 5
 classifier = KNeighborsClassifier(n_neighbors=k, weights='uniform')
@@ -18,8 +19,13 @@ def predict(x_test, y_test):
             if 'true' in key.lower():
                     true_key = key
                     break
+    # Isso acontece quando nenhuma das instâncias foram classificadas como verdadeira
     if true_key == 'empty':
-        report['positives precision'] = 0.0
+        # Caso não haja nenhuma classe verdadeira realmente, o true_positive é 100%
+        report[true_positive_precision] = 1.0
+        for key in y_test:
+            if 'true' in key.lower():
+                report[true_positive_precision] = 0.0 # 0%, caso contrário
     else:
-        report['positives precision'] = report[true_key]['precision']
+        report[true_positive_precision] = report[true_key]['precision']
     return confusion_matrix(y_test, y_pred, labels=np.unique(y_test)),  report

@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 import k_fold_cross_validation as cv
 from sklearn.metrics import roc_curve
 from dataset_reader import datasets
-from sklearn.metrics import roc_curve 
+from sklearn.metrics import roc_curve
+from knn_weight import true_positive_precision
 
 algorithms = (cv.no_weight, cv.weighted, cv.adaptative)
 ks = cv.ks
@@ -70,15 +71,15 @@ def plot_roc_curve(reports_avg, dataset_index):
         for algorithm in algorithms:
                 true_positives[algorithm] = {}
                 for k in ks:
-                        true_positives[algorithm][k] = float(reports_avg[algorithm][k]['positives precision'])
+                        true_positives[algorithm][k] = float(reports_avg[algorithm][k][true_positive_precision])
 
-        k_colors = ['b', 'g', 'r', 'c', 'k']
+        k_colors = ['b', 'g', 'r', 'c', 'm', 'tab:brown', 'tab:olive', 'tab:pink']
         for algorithm in algorithms:
                 plt.figure()
                 i = 0
                 for k in ks:
                         true_positive = true_positives[algorithm][k]              
-                        plt.plot( 1 - true_positive, true_positive, k_colors[i%4] + 'o', label='K = ' + str(k))
+                        plt.plot( 1 - true_positive, true_positive, 'o', label='K = ' + str(k), color=k_colors[i])
                         i = i + 1
                 plt.plot([0, 1], [0, 1], color='darkblue', linestyle='--', label='ROC')
                 plt.xlabel('False Positive Rate')
