@@ -71,7 +71,7 @@ def plot_roc_curve(reports_avg, dataset_index):
                 for k in ks:
                         true_positives[algorithm][k] = float(reports_avg[algorithm][k][knn_no_weight.true_positive_precision])
 
-        k_colors = ['b', 'g']
+        k_colors = ['b', 'g', 'r']
         for algorithm in algorithms:
                 plt.figure()
                 i = 0
