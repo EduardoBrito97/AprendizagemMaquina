@@ -1,7 +1,7 @@
 from sklearn.neighbors import KNeighborsClassifier
 from prototype_gen import random_prototypes
 
-weight = 0.01
+weight = 0.25
 num_of_prototypes = 100
 
 def update_prototype(prototype, real_instance, is_same_class):
