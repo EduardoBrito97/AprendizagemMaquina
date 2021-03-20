@@ -7,7 +7,8 @@ number_of_attributes = [21, 94]
 def get_dataset(dataset_index):
     data = arff.loadarff('datasets/' + datasets[dataset_index])
     df = pd.DataFrame(data[0])
-    df = df.dropna(how='any',axis=0) 
+    df = df.dropna(how='any',axis=0)
+    df = df.sample(frac = 1)
     if dataset_index == 0:
         df['defects'] = df['defects'].astype(str)
     elif dataset_index == 1:

@@ -13,9 +13,8 @@ ks = cv.ks
 algorithms = ['lvq1', 'lvq2', 'lvq3']
 
 def train_and_plot_graphs(dataset_index):
-        cv.train_and_get_reports(algorithms[0], dataset_index, knn_no_weight, lvq1)
-        cv.train_and_get_reports(algorithms[1], dataset_index, knn_no_weight, lvq2)
-        cv.train_and_get_reports(algorithms[2], dataset_index, knn_no_weight, lvq3)
+        cv.train_and_test_on_dataset_and_save_results(0)
+        cv.train_and_test_on_dataset_and_save_results(1)
         reports_avg = cv.process_reports()
 
         algorithms_order = []

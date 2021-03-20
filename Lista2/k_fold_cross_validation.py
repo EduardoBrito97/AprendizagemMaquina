@@ -5,7 +5,7 @@ import knn_no_weight
 import math
 import os
 import time
-import lvq1
+import lvq1, lvq2, lvq3
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
@@ -16,7 +16,7 @@ k_fold = 10
 reports = {}
 matrices = {}
 
-ks = [1, 3]
+ks = [1, 3, 5]
 
 def train_and_get_reports(algorithm, dataset_index, trainer, prototype_gen):
     dataset = get_dataset(dataset_index)
@@ -97,8 +97,8 @@ def process_reports():
 def train_and_test_on_dataset_and_save_results(dataset_index):
     dataset_name = datasets[dataset_index]
     train_and_get_reports("lvq1", dataset_index, knn_no_weight, lvq1)
-    #train_and_get_reports("lvq2", dataset_index, knn_no_weight, lvq2)
-    #train_and_get_reports("lvq3", dataset_index, knn_no_weight, lvq3)
+    train_and_get_reports("lvq2", dataset_index, knn_no_weight, lvq2)
+    train_and_get_reports("lvq3", dataset_index, knn_no_weight, lvq3)
     reports_avg = process_reports()
 
     folder_name = "results/" + dataset_name + "/" 
