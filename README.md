@@ -6,3 +6,4 @@ Repositório criado para os códigos fontes referentes às listas de exercícios
 [Link](https://www.overleaf.com/read/zmfgqmbhpnbc) para o relatório em Latex.
 
 ## List 2 - LVQ
+[Link](https://www.overleaf.com/read/kjphpqkntcyk) para o relatório em Latex.
