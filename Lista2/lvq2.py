@@ -1,4 +1,5 @@
 import numpy as np
+import lvq1
 from sklearn.neighbors import KNeighborsClassifier
 from prototype_gen import random_prototypes
 from lvq_base import update_prototype, num_of_prot_training_epochs
@@ -6,8 +7,8 @@ from lvq_base import update_prototype, num_of_prot_training_epochs
 weight = 0.25
 
 def gen_prototypes(x_train, y_train):
-    # Gerando os protótipos para poder fazer o prodecedimento do LVQ1.1
-    prototypes_x, prototypes_y, x_train, y_train = random_prototypes(x_train, y_train)
+    # Gerando os protótipos para poder fazer o prodecedimento do LVQ2.1
+    prototypes_x, prototypes_y = lvq1.gen_prototypes(x_train, y_train)
 
     classifier = KNeighborsClassifier(n_neighbors=2, weights='uniform')
     classifier.fit(prototypes_x, prototypes_y)
