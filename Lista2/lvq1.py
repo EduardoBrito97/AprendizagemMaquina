@@ -9,21 +9,21 @@ def gen_prototypes(x_train, y_train):
     prototypes_x, prototypes_y, x_train, y_train = random_prototypes(x_train, y_train)
 
     classifier = KNeighborsClassifier(n_neighbors=1, weights='uniform')
-    classifier.fit(x_train, y_train)
+    classifier.fit(prototypes_x, prototypes_y)
 
     for _ in range(num_of_prot_training_epochs):
-        predicted_classes = classifier.predict(prototypes_x)
-        real_instances = classifier.kneighbors(X=prototypes_x, n_neighbors=1, return_distance=False)
-        for i in range(len(prototypes_x)):
-            prototype = prototypes_x[i]
-            prototype_class = prototypes_y[i]
+        predicted_classes = classifier.predict(x_train)
+        real_instances = classifier.kneighbors(X=x_train, n_neighbors=1, return_distance=False)
+        for i in range(len(x_train)):
+            real_instance = x_train[i]
+            real_instance_class = y_train[i]
 
             # Descobrindo qual seria a classe do protótipo ao usar knn pra classificá-lo
-            predicted_class = predicted_classes[i]
-            real_instance_index = real_instances[i]
-            real_instance = x_train[real_instance_index][0]
+            prototype_class = predicted_classes[i]
+            prototype_index = real_instances[i]
+            prototype = prototypes_x[prototype_index][0]
 
-            is_same_class = prototype_class == predicted_class
+            is_same_class = prototype_class == real_instance_class
             
             # Atualizando o protótipo baseado nas classes e na distância
             update_prototype(prototype, real_instance, is_same_class, weight)
