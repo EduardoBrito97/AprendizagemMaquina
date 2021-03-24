@@ -1,0 +1,8 @@
+b'FALSE' = {'precision': 0.7177156177156176, 'recall': 0.7578721278721278, 'f1-score': 0.7185056446821154, 'support': 8.5}
+b'_TRUE' = {'precision': 0.6283333333333333, 'recall': 0.5763888888888888, 'f1-score': 0.5513120213120214, 'support': 6.0}
+accuracy = 0.6633333333333333
+macro avg = {'precision': 0.6730244755244755, 'recall': 0.6671305083805085, 'f1-score': 0.6349088329970682, 'support': 14.5}
+weighted avg = {'precision': 0.7209088319088319, 'recall': 0.6633333333333333, 'f1-score': 0.6642178671002201, 'support': 14.5}
+positives precision = 0.6283333333333333
+train_time_in_ms = 0.1
+test_time_in_ms = 8.1
