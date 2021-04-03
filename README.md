@@ -9,4 +9,4 @@ Repositório criado para os códigos fontes referentes às listas de exercícios
 [Link](https://www.overleaf.com/read/kjphpqkntcyk) para o relatório em Latex.
 
 ## Lista 3 - One class classification
-[Link](https://www.overleaf.com/read/kjphpqkntcyk) para o relatório em Latex.
+[Link](https://www.overleaf.com/read/mrkfpvcfqytg) para o relatório em Latex.

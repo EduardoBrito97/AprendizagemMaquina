@@ -2,10 +2,10 @@
 * Propor um algoritmo que consiga predizer caso uma instância pertence ou não à mesma classe que as instâncias de treinamento
 * Algoritmo proposto:
     * Tentar eliminar ruídos da seguinte forma:
-        * Caso exista ao menos 3 instâncias de mesma classe à uma distância X da instância analisada, ela é usada como treinamento
+        * Caso exista ao menos 1 instância de mesma classe à uma distância X da instância analisada, ela é usada como treinamento
         * Caso não exista, ela é removida do conjunto de treinamento
     * Criar uma região de aceitação: 
-        * Ao analisar uma nova instância, caso ela esteja à uma distância Y < X, ela é dita como da classe treinada
+        * Ao analisar uma nova instância, caso ela esteja à uma distância Y, ela é dita como da classe treinada
         * Caso não esteja, é dita de outra classe
     * Tanto o dataset quanto a instância nova analisada serão normalizadas
 * Datasets provenientes de [PROMISE DATASETS PAGE](http://promise.site.uottawa.ca/SERepository/datasets-page.html). Datasets escolhidos:
