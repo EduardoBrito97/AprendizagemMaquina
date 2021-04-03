@@ -5,14 +5,10 @@ import os
 import time
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import classification_report, confusion_matrix
-from dataset_reader import get_1_class_instance, number_of_attributes, datasets
+from dataset_reader import get_1_class_instance, number_of_attributes
 
-reports = {}
-matrices = {}
-
-train_class_percentage = 30
-filter_threshold = 0.05
-class_threshold = 0.03
+filter_threshold = 0.15
+class_threshold = 0.05
 
 def filter_instances(x, y):
     classifier = KNeighborsClassifier(n_neighbors=2, weights='uniform')
@@ -43,11 +39,9 @@ def test(x_train, y_train, x_test, y_test):
     classifier = KNeighborsClassifier(n_neighbors=1, weights='uniform')
     classifier.fit(x_train, y_train)
     x_neighbors = classifier.kneighbors(X=x_test, n_neighbors=1, return_distance=False)
-    
-    true_positives = 0
-    false_positives = 0
-    true_negatives = 0
-    false_negatives = 0
+
+    y_pred = []
+    y_true = []
 
     num_of_attr = len(x_test[0])
     min_inst = np.zeros(num_of_attr)
@@ -67,16 +61,10 @@ def test(x_train, y_train, x_test, y_test):
         if normalized_dist > class_threshold:
             predicted_class = False
 
-        if predicted_class == True and instance_class == True:
-            true_positives = true_positives + 1
-        elif predicted_class == True and instance_class == False:
-            false_positives = false_positives + 1
-        elif predicted_class == False and instance_class == False:
-            true_negatives = true_negatives + 1
-        else:
-            false_negatives = false_negatives + 1
+        y_pred.append(predicted_class)
+        y_true.append(instance_class)
 
-    return true_positives, false_positives, true_negatives, false_negatives
+    return y_pred, y_true
     
 def train_and_test(dataset_index):
     dataset_true = get_1_class_instance(dataset_index, True)
@@ -115,9 +103,31 @@ def train_and_test_on_dataset_and_save_results(dataset_index):
                 fo.write(str(k) + ' = '+ str(v) + '\n')
             fo.close()
 
+def gen_txt(reports):
+    for dataset in reports.keys():
+        folder_name = "results/" + dataset + "/" 
+        for percentage in reports[dataset]:
+            report = reports[dataset][percentage]
+            file_name = folder_name + str(percentage) + "_results.txt"
+            fo = open(file_name, "w")
+            fo.write(report)
+            fo.close()
+
 if __name__ == '__main__':
-    tp, fp, tn, fn = train_and_test(1)
-    print('tp ' + str(tp))
-    print('fp ' + str(fp))
-    print('tn ' + str(tn))
-    print('fn ' + str(fn))
+    global train_class_percentage
+    reports = {}
+    reports['pc1'] = {}
+    reports['kc1'] = {}
+
+    for percentage in [30, 40, 50]:
+        train_class_percentage = percentage
+        
+        y_pred, y_true = train_and_test(0)
+        report = classification_report(y_true, y_pred)
+        reports['pc1'][percentage] = report
+
+        y_pred, y_true = train_and_test(1)
+        report = classification_report(y_true, y_pred)
+        reports['kc1'][percentage] = report
+
+    gen_txt(reports)

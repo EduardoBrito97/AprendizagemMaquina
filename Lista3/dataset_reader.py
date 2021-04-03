@@ -31,7 +31,7 @@ def get_1_class_instance(dataset_index, instance_val):
     df = get_dataset(dataset_index)
 
     df_num = df.select_dtypes(include=[np.number])
-    df_norm = (df_num - df_num.mean()) / (df_num.max() - df_num.min())
+    df_norm = (df_num - df_num.mean()) / (df_num.max() - df_num.min() + 0.000001)
     df[df_norm.columns] = df_norm
 
     if dataset_index == 0:
