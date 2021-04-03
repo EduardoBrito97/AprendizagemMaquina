@@ -15,6 +15,8 @@ def filter_instances(x, y):
     classifier.fit(x, y)
     x_neighbors = classifier.kneighbors(X=x, n_neighbors=2, return_distance=False)
 
+    # Precisamos saber qual é a distância euclidiana máxima, para poder normalizarmos a distância
+    # e os limiares serem coerentes
     num_of_attr = len(x[0])
     min_inst = np.zeros(num_of_attr)
     max_inst = np.ones(num_of_attr)
@@ -43,6 +45,8 @@ def test(x_train, y_train, x_test, y_test):
     y_pred = []
     y_true = []
 
+    # Precisamos saber qual é a distância euclidiana máxima, para poder normalizarmos a distância
+    # e os limiares serem coerentes
     num_of_attr = len(x_test[0])
     min_inst = np.zeros(num_of_attr)
     max_inst = np.ones(num_of_attr)
@@ -56,15 +60,20 @@ def test(x_train, y_train, x_test, y_test):
     for index in range(len(x_test)):
         instance_class = 'true' in y_test[index].lower()
 
+        # Achamos a distância entre a instância de teste e a instância gravada mais próximo
         neighbor_index = x_neighbors[index][0]
         neighbor = x_train[neighbor_index]
 
         neighbor_dist = np.linalg.norm(x_test[index] - neighbor) / max_dist
         normalized_dist = neighbor_dist 
         
-        predicted_class = True
+        # Caso essa distância seja maior que o limiar de classe, ela será classificada como 
+        # classe diferente da que usamos para treinar. Como usamos as classes "False" para treinar,
+        # nos restaria a classe "True" como predita. Para abstrair o algoritmo, um tratamento extra
+        # seria necessário para apenas dizer que a instância é ou não da mesma classe que a prevista
+        predicted_class = False
         if normalized_dist > class_threshold:
-            predicted_class = False
+            predicted_class = True
 
         if predicted_class == True and instance_class == True:
             tp = tp + 1
@@ -90,32 +99,17 @@ def train_and_test(dataset_index):
     x_false = dataset_false.iloc[:, :-1].values
     y_false = dataset_false.iloc[:, number_of_attributes[dataset_index]].values
 
-    num_of_training_classes = math.ceil(( len(x_false) * train_class_percentage) / 100)
+    num_of_training_classes = math.floor(( len(x_false) * train_class_percentage) / 100)
 
     x_train = x_false[0:num_of_training_classes]
     y_train = y_false[0:num_of_training_classes]
 
-    x_test = np.concatenate((x_false[num_of_training_classes : len(x_false)], x_true))
-    y_test = np.concatenate((y_false[num_of_training_classes : len(y_false)], y_true))
+    x_test = np.concatenate((x_false[num_of_training_classes+1 : len(x_false)], x_true))
+    y_test = np.concatenate((y_false[num_of_training_classes+1 : len(y_false)], y_true))
 
     x_train, y_train = filter_instances(x_train, y_train)
 
     return test(x_train, y_train, x_test, y_test)
-
-def train_and_test_on_dataset_and_save_results(dataset_index):
-    dataset_name = datasets[dataset_index]
-
-    folder_name = "results/" + dataset_name + "/" 
-    if os.path.exists(folder_name) == False:
-            os.mkdir(folder_name, mode = 0o666)
-    for knn_alg in reports.keys():
-        for k in reports[knn_alg]:
-            current_dict = reports[knn_alg][k]
-            file_name = folder_name + str(knn_alg) + "_" + str(k) + "_results.txt"
-            fo = open(file_name, "w")
-            for k, v in current_dict.items():
-                fo.write(str(k) + ' = '+ str(v) + '\n')
-            fo.close()
 
 def gen_txt(reports, statistics):
     for dataset in reports.keys():
