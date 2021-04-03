@@ -6,3 +6,4 @@
     accuracy                           0.33       102
    macro avg       0.23      0.40      0.26       102
 weighted avg       0.21      0.33      0.22       102
+{'tp': 1, 'fp': 1, 'tn': 33, 'fn': 59}

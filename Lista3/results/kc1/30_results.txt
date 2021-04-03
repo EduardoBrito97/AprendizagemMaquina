@@ -1,8 +1,9 @@
               precision    recall  f1-score   support
 
-       False       0.45      0.83      0.59        59
-        True       0.09      0.02      0.03        60
+       False       0.45      0.81      0.58        59
+        True       0.15      0.03      0.05        60
 
     accuracy                           0.42       119
-   macro avg       0.27      0.42      0.31       119
-weighted avg       0.27      0.42      0.31       119
+   macro avg       0.30      0.42      0.32       119
+weighted avg       0.30      0.42      0.32       119
+{'tp': 2, 'fp': 2, 'tn': 48, 'fn': 58}

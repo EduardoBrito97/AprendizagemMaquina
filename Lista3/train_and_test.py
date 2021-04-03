@@ -48,6 +48,11 @@ def test(x_train, y_train, x_test, y_test):
     max_inst = np.ones(num_of_attr)
     max_dist = np.linalg.norm(max_inst - min_inst)
 
+    tp = 0
+    fp = 0
+    tn = 0
+    fn = 0
+
     for index in range(len(x_test)):
         instance_class = 'true' in y_test[index].lower()
 
@@ -61,10 +66,19 @@ def test(x_train, y_train, x_test, y_test):
         if normalized_dist > class_threshold:
             predicted_class = False
 
+        if predicted_class == True and instance_class == True:
+            tp = tp + 1
+        elif predicted_class == True and instance_class == False:
+            fp = fp + 1
+        elif predicted_class == False and instance_class == False:
+            tn = tn + 1
+        else:
+            fn = fn + 1
+
         y_pred.append(predicted_class)
         y_true.append(instance_class)
 
-    return y_pred, y_true
+    return tp, fp, tn, fn, y_pred, y_true
     
 def train_and_test(dataset_index):
     dataset_true = get_1_class_instance(dataset_index, True)
@@ -103,18 +117,26 @@ def train_and_test_on_dataset_and_save_results(dataset_index):
                 fo.write(str(k) + ' = '+ str(v) + '\n')
             fo.close()
 
-def gen_txt(reports):
+def gen_txt(reports, statistics):
     for dataset in reports.keys():
         folder_name = "results/" + dataset + "/" 
         for percentage in reports[dataset]:
             report = reports[dataset][percentage]
+            statistic = statistics[dataset][percentage]
+
             file_name = folder_name + str(percentage) + "_results.txt"
             fo = open(file_name, "w")
             fo.write(report)
+            fo.write(str(statistic))
+
             fo.close()
 
 if __name__ == '__main__':
     global train_class_percentage
+    statistics = {}
+    statistics['pc1'] = {}
+    statistics['kc1'] = {}
+
     reports = {}
     reports['pc1'] = {}
     reports['kc1'] = {}
@@ -122,12 +144,24 @@ if __name__ == '__main__':
     for percentage in [30, 40, 50]:
         train_class_percentage = percentage
         
-        y_pred, y_true = train_and_test(0)
+        tp, fp, tn, fn, y_pred, y_true = train_and_test(0)
         report = classification_report(y_true, y_pred)
         reports['pc1'][percentage] = report
+        
+        statistics['pc1'][percentage] = {}
+        statistics['pc1'][percentage]['tp'] = tp
+        statistics['pc1'][percentage]['fp'] = tp
+        statistics['pc1'][percentage]['tn'] = tn
+        statistics['pc1'][percentage]['fn'] = fn
 
-        y_pred, y_true = train_and_test(1)
+        tp, fp, tn, fn, y_pred, y_true = train_and_test(1)
         report = classification_report(y_true, y_pred)
         reports['kc1'][percentage] = report
+        
+        statistics['kc1'][percentage] = {}
+        statistics['kc1'][percentage]['tp'] = tp
+        statistics['kc1'][percentage]['fp'] = tp
+        statistics['kc1'][percentage]['tn'] = tn
+        statistics['kc1'][percentage]['fn'] = fn
 
-    gen_txt(reports)
+    gen_txt(reports, statistics)
