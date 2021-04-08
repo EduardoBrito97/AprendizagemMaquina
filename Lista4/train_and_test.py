@@ -82,13 +82,20 @@ def find_best_k(x_train):
 def train_and_test(x_train, y_train, x_test, y_test):
     rows_true = []
     rows_false = []
-    for i, row in y_train.items():
+    index = 0
+    for _, row in y_train.items():
         if 'true' in str(row).lower():
-            rows_true.append(i)
+            rows_true.append(index)
         else:
-            rows_false.append(i)
+            rows_false.append(index)
+        index = index + 1
     
-    k = find_best_k(x_train)
+    x_train_true = x_train.iloc[rows_true]
+    k_true = find_best_k(x_train_true)
+
+    x_train_false = x_train.iloc[rows_false]
+    k_false = find_best_k(x_train_false)
+
     return test(x_train, y_train, x_test, y_test, k)
 
 def gen_reports_and_statistics(dataset, dataset_target, dataset_name, dataset_index, reports, statistics):
