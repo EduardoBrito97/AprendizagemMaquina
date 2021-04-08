@@ -10,3 +10,6 @@ Repositório criado para os códigos fontes referentes às listas de exercícios
 
 ## Lista 3 - One class classification
 [Link](https://www.overleaf.com/read/mrkfpvcfqytg) para o relatório em Latex.
+
+## Lista 4 - KMeans
+[Link](https://www.overleaf.com/read/mrkfpvcfqytg) para o relatório em Latex.

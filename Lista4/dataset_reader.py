@@ -45,3 +45,7 @@ def get_columns_and_class_column(dataset):
     class_column = columns[-1]
     columns = columns[:-1]
     return columns, class_column
+
+if __name__ == '__main__':
+    df = get_1_class_instance(1, False)
+    print(df.head())
