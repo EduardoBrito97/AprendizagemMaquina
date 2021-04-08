@@ -1,11 +1,9 @@
 import numpy as np
 import pandas as pd
-import math
 import os
-import time
 from sklearn.cluster import KMeans
 from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix, silhouette_score
 from sklearn.naive_bayes import GaussianNB
 from dataset_reader import get_dataset, number_of_attributes
 
@@ -39,52 +37,47 @@ def test(x_train, y_train, x_test, y_test, best_k):
 
     return tp, fp, tn, fn, y_pred, y_true
 
-def find_best_k(x_train_true, x_train_false, x_train, x_test, y_test):
-    best_k = 2
-    best_f1_score = 0
-    for k in [2, 3, 4, 5, 6]:
-        # Criamos KMeans para cada classe, para achar os clusters
-        kmeans_true = KMeans(n_clusters=k, random_state=0).fit(x_train_true)
-        kmeans_false = KMeans(n_clusters=k, random_state=0).fit(x_train_false)
-
-        # Sabemos agora onde fica cada cluster de cada classe
-        true_clusters = kmeans_true.cluster_centers_
-        false_clusters = kmeans_false.cluster_centers_
+def select_using_elbow_method(distortions):
+    for index in range(len(distortions)):
+        if index == 0 or index == (len(distortions) - 1):
+            continue
         
-        # Precisamos saber agora, no KMeans completo, qual cluster é de qual classe
-        full_kmeans = KMeans(n_clusters=k, random_state=0).fit(x_train)
-        mapped_clusters = []
+        previous_distortion = distortions[index - 1]
+        curr_distortion = distortions[index]
+        next_distortion = distortions[index + 1]
 
-        breakpoint()
-        # Iterando sobre todos eles, temos como saber à qual classe cada cluster se refere
-        for cluster_center in full_kmeans.cluster_centers_:
-            if cluster_center in true_clusters:
-                mapped_clusters.append(True)
-            else:
-                mapped_clusters.append(False)
+        diff_from_previous = previous_distortion - curr_distortion
+        diff_from_next = curr_distortion - next_distortion
+        
+        # Procuramos uma quebra muito grande nas diferenças entre o anterior e o atual e o atual e o posterior,
+        # onde 2 foi um dado experimental
+        if diff_from_previous > (diff_from_next * 2):
+            return index, True
 
-        class_clusters = full_kmeans.predict(x_test)
-        y_pred = []
+    return index, False
 
-        # Por fim, tentamos predizer qual a classe baseando-se pelo índice do cluster
-        for class_cluster in class_clusters:
-            y_pred.append(mapped_clusters[class_cluster])
+# Primeiramente tenta-se usar o método do "Elbow";
+# Caso falhe, usamos a método "Silhouette"
+def find_best_k(x_train):
+    ks = [2, 3, 4, 5, 6]
 
-        y_true = []
-        # Mapeando agora as classes de verdade para booleano True/False
-        for y in y_test:
-            y_true.append('true' in y.lower())
+    distortions = []
+    silhouettes = []
+    for k in ks:
+        kmeans = KMeans(n_clusters=k).fit(x_train)
+        
+        # Por via das dúvidas, já armazenamos o score da silhouette
+        labels = kmeans.labels_
+        silhouettes.append(silhouette_score(x_train, labels, metric = 'euclidean'))
 
-        report = classification_report(y_true, y_pred)
-        true_f1_score = report[True]['f1-score']
-        false_f1_score = report[False]['f1-score']
-        avg_f1_score = (true_f1_score + false_f1_score) / 2
+        # E calculamos o erro quadrático médio de cada cluster para fazer o método do elbow
+        distortions.append(kmeans.inertia_)
 
-        if avg_f1_score > best_f1_score:
-            best_f1_score = avg_f1_score
-            best_k = k
-
-    return best_k
+    # Por fim, decidimos qual método usar
+    index, elbow_found = select_using_elbow_method(distortions)    
+    if not elbow_found:
+        index = silhouettes.index(max(silhouettes))
+    return ks[index]
     
 def train_and_test(x_train, y_train, x_test, y_test):
     rows_true = []
@@ -94,12 +87,8 @@ def train_and_test(x_train, y_train, x_test, y_test):
             rows_true.append(i)
         else:
             rows_false.append(i)
-
-    x_train_true = x_train.iloc[rows_true]
-    x_train_false = x_train.iloc[rows_false]
     
-    k = find_best_k(x_train_true, x_train_false, x_train, x_test, y_test)
-
+    k = find_best_k(x_train)
     return test(x_train, y_train, x_test, y_test, k)
 
 def gen_reports_and_statistics(dataset, dataset_target, dataset_name, dataset_index, reports, statistics):
