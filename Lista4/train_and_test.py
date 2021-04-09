@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from sklearn.naive_bayes import GaussianNB
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
@@ -11,10 +12,10 @@ def test(x_train, y_train, x_test, y_test):
     fn = 0
 
     gnb = GaussianNB()
-    y_pred = gnb.fit(x_train, y_train).predict(x_test)
+    y_pred = gnb.fit(x_train, y_train.values.ravel(order='C')).predict(x_test)
     y_true = []
     for index in range(len(x_test)):
-        instance_class = 'true' in y_test.iloc[index].lower()
+        instance_class = 'true' in y_test.iloc[index].values[0].lower()
         predicted_class = y_pred[index]
         if predicted_class == True and instance_class == True:
             tp = tp + 1
@@ -76,7 +77,7 @@ def train_and_test(x_train, y_train, x_test, y_test):
     index = 0
 
     # Separando o x de teste entre x_true e x_false
-    for _, row in y_train.items():
+    for _, row in y_train.iterrows():
         if 'true' in str(row).lower():
             rows_true.append(index)
         else:
@@ -98,12 +99,37 @@ def train_and_test(x_train, y_train, x_test, y_test):
     new_y_train = []
 
     for cluster_center in kmeans_true.cluster_centers_:
-        new_x_train.append(cluster_center)
-        new_y_train.append([True])
+        current_dict_x = {}
+        current_dict_y = {}
+
+        index = 0
+        for column in x_train.columns:
+            current_dict_x[column] = cluster_center[index]
+            index = index + 1
+        
+        for column in y_train.columns:
+            current_dict_y[column] = True
+
+        new_x_train.append(current_dict_x)
+        new_y_train.append(current_dict_y)
 
     for cluster_center in kmeans_false.cluster_centers_:
-        new_x_train.append(cluster_center)
-        new_y_train.append([False])
+        current_dict_x = {}
+        current_dict_y = {}
+
+        index = 0
+        for column in x_train.columns:
+            current_dict_x[column] = cluster_center[index]
+            index = index + 1
+        
+        for column in y_train.columns:
+            current_dict_y[column] = False
+
+        new_x_train.append(current_dict_x)
+        new_y_train.append(current_dict_y)
+
+    pandas_x_train = pd.DataFrame.from_dict(new_x_train)
+    pandas_y_train = pd.DataFrame.from_dict(new_y_train)
 
     # Por fim, testamos usando Gaussian Nayve Bayes usando os novos grupos
-    return test(new_x_train, new_y_train, x_test, y_test)
+    return test(pandas_x_train, pandas_y_train, x_test, y_test)

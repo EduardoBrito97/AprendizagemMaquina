@@ -6,30 +6,6 @@ from dataset_reader import get_dataset, number_of_attributes
 from train_and_test import train_and_test
 
 kfold_num = 5
-def gen_reports_and_statistics(dataset, dataset_target, dataset_name, dataset_index, reports, statistics):
-    kfold = StratifiedKFold(n_splits=kfold_num, shuffle=True)
-    fold_num = 0
-    for train_index, test_index in kfold.split(dataset, dataset_target):
-        train = dataset.iloc[train_index,:]
-        x_train = train.iloc[:, :-1]
-        y_train = train.iloc[:, number_of_attributes[dataset_index]]
-
-        test = dataset.iloc[test_index,:]
-        x_test = test.iloc[:, :-1]
-        y_test = test.iloc[:, number_of_attributes[dataset_index]]
-
-        tp, fp, tn, fn, y_pred, y_true = train_and_test(x_train, y_train, x_test, y_test)
-        breakpoint()
-        report = classification_report(y_true, y_pred, output_dict=True, zero_division=1)
-        reports[dataset_name][fold_num] = report
-        
-        statistics[dataset_name][fold_num] = {}
-        statistics[dataset_name][fold_num]['tp'] = tp
-        statistics[dataset_name][fold_num]['fp'] = tp
-        statistics[dataset_name][fold_num]['tn'] = tn
-        statistics[dataset_name][fold_num]['fn'] = fn
-        fold_num = fold_num + 1
-
 def sum_reports(reports_sum, reports, dataset_name, fold):
     for param in reports[dataset_name][fold].keys():
         if type(reports[dataset_name][fold][param]) != type({}) and param not in reports_sum[dataset_name]:
@@ -100,6 +76,31 @@ def gen_txt(reports, statistics):
             fo.write('\n')
 
         fo.close()
+
+def gen_reports_and_statistics(dataset, dataset_target, dataset_name, dataset_index, reports, statistics):
+    kfold = StratifiedKFold(n_splits=kfold_num, shuffle=True)
+    fold_num = 0
+    for train_index, test_index in kfold.split(dataset, dataset_target):
+        print('Training dataset ' + dataset_name + ', Fold ' + str(fold_num + 1) + ' out of ' + str(kfold_num) + '...')
+        train = dataset.iloc[train_index,:]
+        x_train = train.iloc[:, :-1]
+        y_train = train.iloc[:, number_of_attributes[dataset_index]:]
+
+        test = dataset.iloc[test_index,:]
+        x_test = test.iloc[:, :-1]
+        y_test = test.iloc[:, number_of_attributes[dataset_index]:]
+
+        tp, fp, tn, fn, y_pred, y_true = train_and_test(x_train, y_train, x_test, y_test)
+        report = classification_report(y_true, y_pred, output_dict=True, zero_division=1)
+        reports[dataset_name][fold_num] = report
+        
+        statistics[dataset_name][fold_num] = {}
+        statistics[dataset_name][fold_num]['tp'] = tp
+        statistics[dataset_name][fold_num]['fp'] = tp
+        statistics[dataset_name][fold_num]['tn'] = tn
+        statistics[dataset_name][fold_num]['fn'] = fn
+        fold_num = fold_num + 1
+    print('Finished ' + dataset_name + '.')
 
 if __name__ == '__main__':
     global train_class_percentage
