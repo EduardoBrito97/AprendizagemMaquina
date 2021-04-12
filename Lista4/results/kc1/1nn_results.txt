@@ -1,0 +1,9 @@
+b'FALSE': {'precision': 0.6713935574229692, 'recall': 0.6588235294117647, 'f1-score': 0.6637860305412489, 'support': 17.0}
+b'_TRUE': {'precision': 0.5392074592074592, 'recall': 0.55, 'f1-score': 0.5429178743961353, 'support': 12.0}
+accuracy: 0.14482758620689656
+macro avg: {'precision': 0.6053005083152142, 'recall': 0.6044117647058824, 'f1-score': 0.6033519524686921, 'support': 29.0}
+weighted avg: {'precision': 0.6166958616096546, 'recall': 0.6137931034482759, 'f1-score': 0.6137716211018914, 'support': 29.0}
+tp: 6.6
+fp: 6.6
+tn: 11.2
+fn: 5.4

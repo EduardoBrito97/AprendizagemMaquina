@@ -6,28 +6,13 @@ from sklearn.metrics import silhouette_score
 
 # Pegamos os novos conjuntos gerados pelo kmeans, treinamos o Gaussian NB e predizemos o x_teste
 def test(x_train, y_train, x_test, y_test):
-    tp = 0
-    fp = 0
-    tn = 0
-    fn = 0
-
     gnb = GaussianNB()
     y_pred = gnb.fit(x_train, y_train.values.ravel(order='C')).predict(x_test)
     y_true = []
     for index in range(len(x_test)):
         instance_class = 'true' in y_test.iloc[index].values[0].lower()
-        predicted_class = y_pred[index]
-        if predicted_class == True and instance_class == True:
-            tp = tp + 1
-        elif predicted_class == True and instance_class == False:
-            fp = fp + 1
-        elif predicted_class == False and instance_class == False:
-            tn = tn + 1
-        else:
-            fn = fn + 1
-
         y_true.append(instance_class)
-    return tp, fp, tn, fn, y_pred, np.array(y_true)
+    return y_pred, np.array(y_true)
 
 def select_using_elbow_method(distortions):
     for index in range(len(distortions)):
